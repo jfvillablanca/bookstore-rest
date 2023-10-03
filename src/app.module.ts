@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Book } from 'typeorm/entities/Book';
+import { User } from 'typeorm/entities/User';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
@@ -13,7 +15,7 @@ import { AppService } from './app.service';
                 username: process.env.DB_USERNAME || 'root',
                 password: process.env.DB_PASSWORD || 'rootpassword',
                 database: process.env.DB_DATABASE || 'bookstore_rest',
-                entities: [],
+                entities: [User, Book],
                 synchronize: true,
             }),
         }),
