@@ -4,6 +4,7 @@ import { Book } from 'typeorm/entities/Book';
 import { User } from 'typeorm/entities/User';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UsersModule } from './users/users.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { AppService } from './app.service';
                 synchronize: true,
             }),
         }),
+        UsersModule,
     controllers: [AppController],
     providers: [AppService],
 })
