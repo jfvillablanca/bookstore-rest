@@ -8,3 +8,14 @@ export type UpdateUserParams = {
     password: string;
     pseudonym: string;
 };
+
+export type CreateBookParams = {
+    title: string;
+};
+
+export type UpdateBookParams = {
+    title: string;
+    description: string;
+    coverImage: string;
+    price: number;
+};
