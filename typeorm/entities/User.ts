@@ -12,7 +12,7 @@ export class User {
     @Column()
     password: string;
 
-    @Column()
+    @Column({ default: ''})
     pseudonym: string;
 
     @OneToMany(() => Book, (book) => book.user)
