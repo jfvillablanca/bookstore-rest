@@ -22,6 +22,9 @@
                 nodejs_20
                 yarn
                 nest-cli
+                docker
+                docker-compose
+                insomnia
               ];
             }
           ];
