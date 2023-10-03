@@ -9,7 +9,6 @@ import {
     Post,
 } from '@nestjs/common';
 import { CreateBookDto } from '@/src/books/dtos/CreateBook.dto';
-import { CreateUserDto } from '@/src/users/dtos/CreateUser.dto';
 import { UpdateUserDto } from '@/src/users/dtos/UpdateUser.dto';
 import { UsersService } from '@/src/users/services/users/users.service';
 import { UpdateBookDto } from '@/src/books/dtos/UpdateBook.dto';
@@ -21,11 +20,6 @@ export class UsersController {
     @Get()
     getUsers() {
         return this.usersService.findUsers();
-    }
-
-    @Post()
-    createUser(@Body() createUserDto: CreateUserDto) {
-        this.usersService.createUser(createUserDto);
     }
 
     @Patch(':id')

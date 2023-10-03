@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
     CreateBookParams,
-    CreateUserParams,
     UpdateBookParams,
     UpdateUserParams,
 } from '@/src/utils/types';
@@ -19,10 +18,6 @@ export class UsersService {
 
     findUsers() {
         return this.userRepository.find();
-    }
-    createUser(userDetails: CreateUserParams) {
-        const newUser = this.userRepository.create({ ...userDetails });
-        return this.userRepository.save(newUser);
     }
 
     updateUser(id: number, updatedUserDetails: UpdateUserParams) {
