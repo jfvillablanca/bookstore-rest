@@ -18,4 +18,11 @@ export class BooksService {
         }
         return queryBuilder.getMany();
     }
+
+    getBookById(id: number) {
+        return this.bookRepository.findOne({
+            where: { id },
+            relations: ['author'],
+        });
+    }
 }
