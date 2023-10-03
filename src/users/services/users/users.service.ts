@@ -35,7 +35,10 @@ export class UsersService {
 
     async createBookByUser(id: number, bookDetails: CreateBookParams) {
         const user = await this.findUser(id);
-        const newBook = this.bookRepository.create({ ...bookDetails, user });
+        const newBook = this.bookRepository.create({
+            ...bookDetails,
+            author: user,
+        });
         return await this.bookRepository.save(newBook);
     }
 
@@ -45,7 +48,10 @@ export class UsersService {
         bookDetails: UpdateBookParams,
     ) {
         const user = await this.findUser(userId);
-        const book = await this.bookRepository.findOneBy({ id: bookId, user });
+        const book = await this.bookRepository.findOneBy({
+            id: bookId,
+            author: user,
+        });
         if (!book) {
             throw new HttpException('Book not found', HttpStatus.BAD_REQUEST);
         }
@@ -54,11 +60,14 @@ export class UsersService {
 
     async deleteBookByUser(userId: number, bookId: number) {
         const user = await this.findUser(userId);
-        const book = await this.bookRepository.findOneBy({ id: bookId, user });
+        const book = await this.bookRepository.findOneBy({
+            id: bookId,
+            author: user,
+        });
         if (!book) {
             throw new HttpException('Book not found', HttpStatus.BAD_REQUEST);
         }
-        return this.bookRepository.delete({ id: bookId, user });
+        return this.bookRepository.delete({ id: bookId, author: user });
     }
 
     private async findUser(id: number) {

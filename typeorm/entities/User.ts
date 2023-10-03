@@ -15,6 +15,6 @@ export class User {
     @Column({ default: ''})
     pseudonym: string;
 
-    @OneToMany(() => Book, (book) => book.user)
+    @OneToMany(() => Book, (book) => book.author)
     books: Book[];
 }

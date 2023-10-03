@@ -13,7 +13,7 @@ export class Book {
     description: string;
 
     @ManyToOne(() => User, (user) => user.books)
-    user: User;
+    author: User;
 
     @Column({ default: "" })
     coverImage: string;
