@@ -6,8 +6,8 @@ import {
     UpdateUserParams,
 } from '@/src/utils/types';
 import { Repository } from 'typeorm';
-import { Book } from '@/typeorm/entities/Book';
-import { User } from '@/typeorm/entities/User';
+import { Book } from '../../../../typeorm/entities/Book';
+import { User } from '../../../../typeorm/entities/User';
 
 @Injectable()
 export class UsersService {

@@ -1,5 +1,5 @@
 import { Controller, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
-import { BooksService } from '@/src/books/services/books/books.service';
+import { BooksService } from '../../../../src/books/services/books/books.service';
 
 @Controller('books')
 export class BooksController {

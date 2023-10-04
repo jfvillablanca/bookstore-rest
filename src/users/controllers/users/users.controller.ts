@@ -8,10 +8,10 @@ import {
     Patch,
     Post,
 } from '@nestjs/common';
-import { CreateBookDto } from '@/src/books/dtos/CreateBook.dto';
-import { UpdateUserDto } from '@/src/users/dtos/UpdateUser.dto';
-import { UsersService } from '@/src/users/services/users/users.service';
-import { UpdateBookDto } from '@/src/books/dtos/UpdateBook.dto';
+import { CreateBookDto } from '../../../../src/books/dtos/CreateBook.dto';
+import { UpdateUserDto } from '../../../../src/users/dtos/UpdateUser.dto';
+import { UsersService } from '../../../../src/users/services/users/users.service';
+import { UpdateBookDto } from '../../../../src/books/dtos/UpdateBook.dto';
 
 @Controller('users')
 export class UsersController {
