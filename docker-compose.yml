@@ -30,8 +30,39 @@ services:
     volumes:
       - .:/app
 
+  mysql-test:
+    image: mysql:latest
+    container_name: mysql-test-container
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: bookstore_rest_test
+    volumes:
+      - mysql-test-data:/var/lib/mysql
+    networks:
+      - mynetwork
+
+  e2e-test:
+    build:
+      context: .
+      dockerfile: ./test.Dockerfile
+    ports:
+      - "3001:3000"
+    networks:
+      - mynetwork
+    depends_on:
+      - mysql-test
+    volumes:
+      - .:/app
+    environment:
+      DB_HOST: mysql-test-container
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: test
+      DB_DATABASE: bookstore_rest_test
+
 networks:
   mynetwork:
 
 volumes:
   mysql-data:
+  mysql-test-data:
