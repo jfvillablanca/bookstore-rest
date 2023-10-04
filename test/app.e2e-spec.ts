@@ -1,24 +1,33 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
+import { HttpStatus, INestApplication } from '@nestjs/common';
+import { BooksModule } from '../src/books/books.module';
 
-describe('AppController (e2e)', () => {
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Book } from '../typeorm/entities/Book';
+
+import * as request from 'supertest';
+import { MockBooksRepository } from './utils';
+
+describe('BooksController (e2e)', () => {
     let app: INestApplication;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
-            imports: [AppModule],
-        }).compile();
+            imports: [BooksModule],
+        })
+            .overrideProvider(getRepositoryToken(Book))
+            .useValue(new MockBooksRepository())
+            .compile();
 
         app = moduleFixture.createNestApplication();
         await app.init();
     });
 
-    it('/ (GET)', () => {
-        return request(app.getHttpServer())
-            .get('/')
-            .expect(200)
-            .expect('Hello World!');
+    afterAll(async () => {
+        await app.close();
+    });
+
+    it('should get all /books', async () => {
+        await request(app.getHttpServer()).get('/books').expect(HttpStatus.OK);
     });
 });
