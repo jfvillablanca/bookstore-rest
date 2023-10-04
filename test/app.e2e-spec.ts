@@ -170,4 +170,96 @@ describe('App (e2e)', () => {
 
         expect(existingBooks.length).toBe(0);
     });
+
+    it('should list all books with empty search string', async () => {
+        const userId = 1;
+        const user = { username: 'testuser', password: 'test' };
+        const booksForTheLibrary = [
+            { title: 'myBook' },
+            { title: 'anotherBookOfMine' },
+        ];
+
+        await authService.register(user);
+
+        // Add all books to the library
+        await Promise.all(
+            booksForTheLibrary.map(async (book) => {
+                await request(app.getHttpServer())
+                    .post(`/users/${userId}/books`)
+                    .send(book)
+                    .expect(HttpStatus.CREATED);
+            }),
+        );
+
+        const response = await request(app.getHttpServer())
+            .get(`/books`)
+            .expect(HttpStatus.OK);
+
+        const savedBooks = response.body;
+        expect(savedBooks.length).toBe(booksForTheLibrary.length);
+        booksForTheLibrary.map((book, index) => {
+            expect(savedBooks[index].title).toStrictEqual(book.title);
+        });
+    });
+
+    it('should only list a single book based on the search string', async () => {
+        const searchString = 'cannon';
+
+        const userId = 1;
+        const user = { username: 'testuser', password: 'test' };
+        const booksForTheLibrary = [
+            { title: 'glass cannon' },
+            { title: 'tin man' },
+        ];
+
+        await authService.register(user);
+
+        // Add all books to the library
+        await Promise.all(
+            booksForTheLibrary.map(async (book) => {
+                await request(app.getHttpServer())
+                    .post(`/users/${userId}/books`)
+                    .send(book)
+                    .expect(HttpStatus.CREATED);
+            }),
+        );
+
+        const response = await request(app.getHttpServer())
+            .get(`/books?search=${searchString}`)
+            .expect(HttpStatus.OK);
+
+        const searchedBooks = response.body;
+        expect(searchedBooks.length).toBe(1);
+        expect(searchedBooks[0].title).toBe(booksForTheLibrary[0].title);
+    });
+
+    it('should get detailed book info if provided with the book id', async () => {
+        const userId = 1;
+        const bookId = 2;
+        const user = { username: 'testuser', password: 'test' };
+        const booksForTheLibrary = [
+            { title: 'glass cannon' },
+            { title: 'tin man' },
+        ];
+
+        await authService.register(user);
+
+        // Add all books to the library
+        await Promise.all(
+            booksForTheLibrary.map(async (book) => {
+                await request(app.getHttpServer())
+                    .post(`/users/${userId}/books`)
+                    .send(book)
+                    .expect(HttpStatus.CREATED);
+            }),
+        );
+
+        // Get specific book
+        const response = await request(app.getHttpServer())
+            .get(`/books/${bookId}`)
+            .expect(HttpStatus.OK);
+
+        const detailedBook = response.body;
+        expect(detailedBook.title).toBe(booksForTheLibrary[bookId - 1].title);
+    });
 });
