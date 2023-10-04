@@ -27,7 +27,7 @@ export class UsersController {
         @Param('id', ParseIntPipe) id: number,
         @Body() updateUserDto: UpdateUserDto,
     ) {
-        await this.usersService.updateUser(id, updateUserDto);
+        return await this.usersService.updateUser(id, updateUserDto);
     }
 
     @Delete(':id')
@@ -57,10 +57,10 @@ export class UsersController {
     }
 
     @Delete(':userId/books/:bookId')
-    deleteBookByUser(
+    async deleteBookByUser(
         @Param('userId', ParseIntPipe) userId: number,
         @Param('bookId', ParseIntPipe) bookId: number,
     ) {
-        return this.usersService.deleteBookByUser(userId, bookId);
+        await this.usersService.deleteBookByUser(userId, bookId);
     }
 }

@@ -10,8 +10,10 @@ export class AuthService {
         @InjectRepository(User) private userRepository: Repository<User>,
     ) {}
 
-    register(userDetails: CreateUserParams) {
+    async register(userDetails: CreateUserParams) {
         const newUser = this.userRepository.create({ ...userDetails });
-        return this.userRepository.save(newUser);
+        const { password, ...user } = await this.userRepository.save(newUser);
+        void password;
+        return user;
     }
 }

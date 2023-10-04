@@ -20,8 +20,9 @@ export class UsersService {
         return this.userRepository.find();
     }
 
-    updateUser(id: number, updatedUserDetails: UpdateUserParams) {
-        return this.userRepository.update({ id }, { ...updatedUserDetails });
+    async updateUser(id: number, updatedUserDetails: UpdateUserParams) {
+        await this.userRepository.update({ id }, { id, ...updatedUserDetails });
+        return this.findUserById(id);
     }
 
     deleteUser(id: number) {
@@ -29,7 +30,7 @@ export class UsersService {
     }
 
     async createBookByUser(id: number, bookDetails: CreateBookParams) {
-        const user = await this.findUser(id);
+        const user = await this.findUserById(id);
         const newBook = this.bookRepository.create({
             ...bookDetails,
             author: user,
@@ -42,7 +43,7 @@ export class UsersService {
         bookId: number,
         bookDetails: UpdateBookParams,
     ) {
-        const user = await this.findUser(userId);
+        const user = await this.findUserById(userId);
         const book = await this.bookRepository.findOneBy({
             id: bookId,
             author: user,
@@ -50,11 +51,16 @@ export class UsersService {
         if (!book) {
             throw new HttpException('Book not found', HttpStatus.BAD_REQUEST);
         }
-        return this.bookRepository.update({ id: bookId }, { ...bookDetails });
+        await this.bookRepository.update({ id: bookId }, { ...bookDetails });
+
+        return await this.bookRepository.findOne({
+            where: { id: bookId, author: user },
+            relations: ['author'],
+        });
     }
 
     async deleteBookByUser(userId: number, bookId: number) {
-        const user = await this.findUser(userId);
+        const user = await this.findUserById(userId);
         const book = await this.bookRepository.findOneBy({
             id: bookId,
             author: user,
@@ -65,7 +71,15 @@ export class UsersService {
         return this.bookRepository.delete({ id: bookId, author: user });
     }
 
-    private async findUser(id: number) {
+    async findUserByUsername(username: string) {
+        const user = await this.userRepository.findOneBy({ username });
+        if (!user) {
+            throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+        }
+        return user;
+    }
+
+    async findUserById(id: number) {
         const user = await this.userRepository.findOneBy({ id });
         if (!user) {
             throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
